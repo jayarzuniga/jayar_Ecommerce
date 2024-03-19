@@ -17,6 +17,6 @@ urlpatterns = [
     #Store Endpoints
     path('category/', store_views.CategoryListAPIView.as_view()),
     path('products/', store_views.ProductListAPIView.as_view()),
-    path('products/', store_views.ProductDetailAPIView.as_view()),
+    path('products/<slug>/', store_views.ProductDetailAPIView.as_view()),
 
 ]
