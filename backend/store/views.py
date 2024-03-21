@@ -76,8 +76,8 @@ class CartAPIView (generics.ListCreateAPIView):
             cart.color = color
             cart.cart_id = cart_id
 
-            service_fee_amount = 10 / 100
-            cart.service_fee = service_fee_amount * cart.sub_total
+            service_fee_percentage = 10 / 100
+            cart.service_fee = Decimal(service_fee_percentage) * cart.sub_total
             
             cart.total = cart.sub_total + cart.shipping_amount + cart.service_fee + cart.tax_fee
             cart.save()
@@ -100,11 +100,11 @@ class CartAPIView (generics.ListCreateAPIView):
             cart.color = color
             cart.cart_id = cart_id
 
-            service_fee_amount = 10 / 100
-            cart.service_fee = service_fee_amount * cart.sub_total
+            service_fee_percentage = 10 / 100
+            cart.service_fee = Decimal(service_fee_percentage) * cart.sub_total
             
             cart.total = cart.sub_total + cart.shipping_amount + cart.service_fee + cart.tax_fee
             cart.save()
 
             return Response({
-                "message": "Cart created successfully"}, status=HTTP_201_CREATED)
+                "message": "Cart created successfully"}, status=status.HTTP_201_CREATED)
