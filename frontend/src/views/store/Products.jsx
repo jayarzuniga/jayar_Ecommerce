@@ -2,10 +2,52 @@ import React, { useEffect, useState } from "react";
 
 import apiInstance from "../../utils/axios";
 import { Link } from "react-router-dom";
+import GetCurrentAddress from "../plugin/UserCountry";
+import UserData from "../plugin/UserData";
+import CardId from "../plugin/CardId";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
+
+  const[colorValue, setColorValue] = useState("No Color");
+  const[sizeValue, setSizeValue] = useState("No Size");
+  const[qtyValue, setQtyValue] = useState(1);
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const[selectedColor, setSelectedColor] = useState({});
+  const [selectedSize, setSelectedSize] = useState({});
+
+  const currentAddress = GetCurrentAddress();
+  const userData = UserData();
+  const cart_id = CardId();
+  
+
+  const handleColorButtonClick = (event, product_id, colorName) => {
+    setColorValue(colorName)
+    setSelectedProduct(product_id)
+
+    setSelectedColor((prevSelectedColor)=>({
+      ...prevSelectedColor,
+      [product_id]: colorName
+  }))
+  };
+
+  const handleSizeButtonClick = (event, product_id, sizeName) => {
+    setSizeValue(sizeName)
+    setSelectedProduct(product_id)
+
+    setSelectedSize((prevSelectedSize)=>({
+      ...prevSelectedSize,
+      [product_id]: sizeName
+    }))
+  };
+
+  const handleQuantityChange = (event, product_id) => {
+    setQtyValue(event.target.value)
+    setSelectedProduct(product_id)
+  }
+
   useEffect(() => {
     apiInstance.get(`products/`).then((response) => {
       setProducts(response.data);
@@ -16,6 +58,25 @@ function Products() {
       setCategory(response.data);
     });
   }, []);
+
+  const handleAddToCart = async (product_id, price, shipping_amount) => {
+    try {
+      const formdata = new FormData()
+      formdata.append('qty', qtyValue)
+      formdata.append('color', colorValue)
+      formdata.append('size', sizeValue)
+      formdata.append('product_id', product_id)
+      formdata.append('user_id', userData?.user_id)
+      formdata.append('country', currentAddress.country)
+      formdata.append('price', price)
+      formdata.append('shipping_amount', shipping_amount)
+      formdata.append('cart_id', cart_id)
+      const response = await apiInstance.post(`cart-view/`, formdata);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+    }
 
   return (
     <>
@@ -70,57 +131,63 @@ function Products() {
                           className="dropdown-menu"
                           aria-labelledby="dropdownMenuClickable"
                         >
+
                           <div className="d-flex flex-column">
                             <li className="p-1">
-                              <b>Size</b>: XL
+                              <b>Quantity</b> 
                             </li>
                             <div className="p-1 mt-0 pt-0 d-flex flex-wrap">
-                              <li>
-                                <button className="btn btn-secondary btn-sm me-2 mb-1">
-                                  XXL
-                                </button>
-                              </li>
-                              <li>
-                                <button className="btn btn-secondary btn-sm me-2 mb-1">
-                                  XXL
-                                </button>
-                              </li>
-                              <li>
-                                <button className="btn btn-secondary btn-sm me-2 mb-1">
-                                  XXL
-                                </button>
-                              </li>
+                                <li>
+                                  <input className="form-control" onChange={(e)=>handleQuantityChange(e, p.id)} type="number" />
+                                </li>           
                             </div>
                           </div>
+          
+
+
+                          {p.size?.length > 0 && (
+                            <div className="d-flex flex-column">
+                            <li className="p-1">
+                              <b>Size</b>: {selectedSize[p.id] || "No Size"}
+                            </li>
+                            <div className="p-1 mt-0 pt-0 d-flex flex-wrap">
+                              {p.size?.map((s, index) => (
+                                <li key={index}>
+                                  <button className="btn btn-secondary btn-sm me-2 mb-1"
+                                    onClick={(e) => handleSizeButtonClick(e, p.id, s.name)}
+                                  >
+                                    {s.name}
+                                  </button>
+                                </li>
+                              ))}             
+                            </div>
+                          </div>
+                          )}
+
+                          {p.color.length > 0 &&(
                           <div className="d-flex flex-column mt-3">
                             <li className="p-1">
-                              <b>COlor</b>: Red
+                              <b>Color</b>: {selectedColor[p.id] || "No Color"}
                             </li>
                             <div className="p-1 mt-0 pt-0 d-flex flex-wrap">
-                              <li>
-                                <button
-                                  className="btn btn-sm me-2 mb-1 p-3"
-                                  style={{ backgroundColor: "red" }}
-                                />
-                              </li>
-                              <li>
-                                <button
-                                  className="btn btn-sm me-2 mb-1 p-3"
-                                  style={{ backgroundColor: "green" }}
-                                />
-                              </li>
-                              <li>
-                                <button
-                                  className="btn btn-sm me-2 mb-1 p-3"
-                                  style={{ backgroundColor: "yellow" }}
-                                />
-                              </li>
+                              {p.color?.map((c, index) => (
+                                <li key={index}>
+                                  <button
+                                    className="btn btn-sm me-2 mb-1 p-3"
+                                    style={{ backgroundColor: `${c.color_code}`}}
+                                    onClick={(e) => handleColorButtonClick(e, p.id, c.name)}
+                                  />
+                                </li>
+                              ))}
                             </div>
                           </div>
+                          )}
+
                           <div className="d-flex mt-3 p-1">
                             <button
                               type="button"
                               className="btn btn-primary me-1 mb-1"
+                              onClick={() => handleAddToCart(p.id,p.price,p.shipping_amount)}
                             >
                               <i className="fas fa-shopping-cart" />
                             </button>
