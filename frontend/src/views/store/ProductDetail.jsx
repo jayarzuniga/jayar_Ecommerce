@@ -6,6 +6,9 @@ import apiInstance from '../../utils/axios'
 function ProductDetail() {
     const [product, setProduct] = useState({})
     const [specifications, setSpecifications] = useState([])
+    const [gallery, setGallery] = useState([])
+    const [color, setColor] = useState([])
+    const [size, setSize] = useState([])
 
     const param = useParams();
 
@@ -13,6 +16,10 @@ function ProductDetail() {
         apiInstance.get(`products/${param.slug}/`).then((res)=>{
             setProduct(res.data);
             setSpecifications(res.data.specification);
+            setGallery(res.data.gallery);
+            setColor(res.data.color);
+            setSize(res.data.size);
+            
         })
     },[])
     
@@ -43,20 +50,22 @@ function ProductDetail() {
                             </div>
                         </div>
                         <div className="mt-3 d-flex">
-                            {}
-                            <div className="p-3">
-                                <img
-                                    src="https://mdbootstrap.com/img/Photos/Slides/1.jpg"
-                                    style={{
-                                        width: 100,
-                                        height: 100,
-                                        objectFit: "cover",
-                                        borderRadius: 10
-                                    }}
-                                    alt="Gallery image 1"
-                                    className="ecommerce-gallery-main-img active w-100 rounded-4"
-                                />
-                            </div>
+                            {gallery.map((g, 
+                                index) => (
+                                <div className="p-3" key={index}>
+                                    <img
+                                        src={g.image}
+                                        style={{
+                                            width: 100,
+                                            height: 100,
+                                            objectFit: "cover",
+                                            borderRadius: 10
+                                        }}
+                                        alt="Gallery image 1"
+                                        className="ecommerce-gallery-main-img active w-100 rounded-4"
+                                    />
+                                </div>
+                                ))}
                             
                         </div>
                     </div>
@@ -129,26 +138,19 @@ function ProductDetail() {
                                         />
                                     </div>
                                 </div>
-
+                            </div>
                                 {/* Size */}
                                 <div className="col-md-6 mb-4">
                                     <div className="form-outline">
                                         <label className="form-label" htmlFor="typeNumber"><b>Size:</b> XS</label>
                                     </div>
                                     <div className='d-flex'>
-                                        <div key={1} className='me-2'>
+                                        {size.map((s, index)=>(
+                                        <div key={index} className='me-2'>
                                             <input type="hidden" className='size_name' value={"XS"} />
-                                            <button className='btn btn-secondary size_button'>XS</button>
+                                            <button className='btn btn-secondary size_button'>{s.name}</button>
                                         </div>
-                                        <div key={1} className='me-2'>
-                                            <input type="hidden" className='size_name' value={"XXL"} />
-                                            <button className='btn btn-secondary size_button'>XXL</button>
-                                        </div>
-                                        <div key={1} className='me-2'>
-                                            <input type="hidden" className='size_name' value={"XL"} />
-                                            <button className='btn btn-secondary size_button'>XL</button>
-                                        </div>
-                                    </div>
+                                        ))}
                                 </div>
 
                                 {/* Colors */}
@@ -158,21 +160,16 @@ function ProductDetail() {
                                         <label className="form-label" htmlFor="typeNumber"><b>Color:</b> <span>Red</span></label>
                                     </div>
                                     <div className='d-flex'>
-                                        <div key={1}>
-                                            <input type="hidden" className='color_name' value={1} />
-                                            <input type="hidden" className='color_image' value={1} />
-                                            <button className='btn p-3 me-2 color_button' style={{ background: "red" }}></button>
-                                        </div>
-                                        <div key={1}>
-                                            <input type="hidden" className='color_name' value={1} />
-                                            <input type="hidden" className='color_image' value={1} />
-                                            <button className='btn p-3 me-2 color_button' style={{ background: "yellow" }}></button>
-                                        </div>
-                                        <div key={1}>
-                                            <input type="hidden" className='color_name' value={1} />
-                                            <input type="hidden" className='color_image' value={1} />
-                                            <button className='btn p-3 me-2 color_button' style={{ background: "green" }}></button>
-                                        </div>
+
+                                        {color.map((c, index)=>(
+                                            <div key={index} className='me-2'>
+                                                <input type="hidden" className='color_name' value={c.color_name} />
+                                                <input type="hidden" className='color_image' value={c.color_image} />
+                                                <button className='btn p-3 me-2 color_button' style={{ background: `${c.color_code}` }}></button>
+                                            </div>
+                                        ))}
+                  
+                                 
                                     </div>
                                     <hr />
                                 </div>
