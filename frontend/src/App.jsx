@@ -15,6 +15,7 @@ import StoreFooter from "./views/base/StoreFooter";
 import MainWrapper from "../src/layout/MainWrapper";
 import Products from "./views/store/Products";
 import ProductDetail from "./views/store/ProductDetail";
+import Cart from "./views/store/Cart";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -34,6 +35,10 @@ function App() {
         {/*Store Components */}
         <Route path="/" element={<Products />} />
         <Route path="/product-detail/:slug/" element={<ProductDetail />} />
+        <Route path="/cart/" element={<Cart />} />
+
+
+
       </Routes>
       <StoreFooter />
     </BrowserRouter>
