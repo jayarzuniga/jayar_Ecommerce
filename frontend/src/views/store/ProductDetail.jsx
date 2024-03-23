@@ -59,7 +59,7 @@ function ProductDetail() {
             formdata.append('qty', quantity)
             formdata.append('color', colorValue)
             formdata.append('size', sizeValue)
-            formdata.append('product_id', product.id)
+            formdata.append('product_id', product_id)
             formdata.append('user_id', userData.user_id)
             formdata.append('country', currentAddress.country)
             formdata.append('price', product.price)
