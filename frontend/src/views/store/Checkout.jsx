@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react'
 import apiInstance from '../../utils/axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { SERVER_URL } from '../../utils/constant'
+
 import Swal from 'sweetalert2'
 
 
 function Checkout() {
   const [order, setOrder] = useState()
   const [couponCode, setCouponCode] = useState('')
+  const [paymentLoading, setPaymentLoading] = useState(false)
 
   const navigate = useNavigate()
   const param = useParams()
@@ -37,14 +40,15 @@ function Checkout() {
         console.log(error)
     }
   }
-
-
-
-  
-  
+ 
   useEffect( ()=>{
     fetchOrderData()
   }, [])
+
+  const payWithStripe = (event) => {
+    setPaymentLoading(true)
+    event.target.form.submit()
+  }
 
   return (
     <div>
@@ -192,9 +196,17 @@ function Checkout() {
                                     <button className='btn btn-success ms-1' onClick={applyCoupon}><i className='fas fa-check-circle'></i></button>
                                 </div>
 
-                                <form action={`http://127.0.0.1:8000/stripe-checkout/ORDER_ID/`} method='POST'>
-                                    <button type="submit" className="btn btn-primary btn-rounded w-100 mt-2" style={{ backgroundColor: "#635BFF" }}>Pay Now (Stripe) <i className="fas fa-credit-card ms-2"></i></button>
+                                {paymentLoading === true &&
+                                <form action={`${SERVER_URL}/api/v1/stripe-checkout/${order?.oid}/`}>
+                                    <button disabled type="submit" onClick={payWithStripe} className="btn btn-primary btn-rounded w-100 mt-2" style={{ backgroundColor: "#635BFF" }}>Processing... <i className="fas fa-spinner fa-spin ms-2"></i></button>
                                 </form>
+                                }
+
+                                {paymentLoading === false &&
+                                <form action={`${SERVER_URL}/api/v1/stripe-checkout/${order?.oid}/`} method='POST'>
+                                    <button type="submit" onClick={payWithStripe} className="btn btn-primary btn-rounded w-100 mt-2" style={{ backgroundColor: "#635BFF" }}>Pay Now (Stripe) <i className='fas fa-credit-card ms-2'></i></button>
+                                </form>
+                                }
 
                                 {/* <PayPalScriptProvider options={initialOptions}>
                                     <PayPalButtons className='mt-3'

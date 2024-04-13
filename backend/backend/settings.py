@@ -156,6 +156,9 @@ AUTH_USER_MODEL = 'userauths.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY", default="default_value")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="default_value")
+
 
 ANYMAIL = {
     "MAILJET_API_KEY": env("MAILJET_API_KEY", default="default_value"),
