@@ -220,10 +220,11 @@ class CreateOrderAPIView (generics.CreateAPIView):
           cart_id = payload['cart_id']
           user_id = payload['user_id']
 
-          if user_id != 0:
+          try:
                user = User.objects.get(id=user_id)
-          else:
+          except:
                user = None
+
           cart_items = Cart.objects.filter (cart_id=cart_id)
 
           total_shipping = Decimal(0.00)
@@ -234,6 +235,7 @@ class CreateOrderAPIView (generics.CreateAPIView):
           total_total = Decimal(0.00)
         
           order = CartOrder.objects.create(
+                buyer=user,
                 full_name=full_name,
                 email=email,
                 mobile=mobile,
@@ -257,6 +259,7 @@ class CreateOrderAPIView (generics.CreateAPIView):
                    tax_fee=c.tax_fee,
                    total=c.total,
                    initial_total=c.total,
+                   vendor=c.product.vendor
                )
 
                total_shipping += Decimal(c.shipping_amount)
@@ -278,3 +281,13 @@ class CreateOrderAPIView (generics.CreateAPIView):
           order.save()
 
           return Response({"message": "Order Created Successfully", "order_oid": order.oid}, status=status.HTTP_201_CREATED)
+     
+
+class CheckoutView(generics.RetrieveAPIView):
+     serializer_class = CartOrderSerializer
+     lookup_field = 'order_oid'
+
+     def get_object(self):
+          order_oid = self.kwargs['order_oid']
+          order = CartOrder.objects.get(oid=order_oid)
+          return order

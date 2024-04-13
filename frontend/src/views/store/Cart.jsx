@@ -6,6 +6,7 @@ import UserData from "../plugin/UserData";
 import CardId from "../plugin/CardId";
 import GetCurrentAddress from "../plugin/UserCountry";
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
 const Toast = Swal.mixin ({
@@ -33,6 +34,7 @@ function Cart() {
     const userData = UserData();
     const card_id = CardId();
     const currentAddress = GetCurrentAddress();
+    const navigate = useNavigate();
     
     const fetchCartData = (cartId, userId) => {
         const url = userId ? `cart-list/${cartId}/${userId}` : `cart-list/${cartId}`
@@ -157,14 +159,36 @@ function Cart() {
         console.log(value);
     }
 
-    const createOrder = () => {
-        console.log(fullName)
-        console.log(email);
-        console.log(mobile);
-        console.log(address)
-        console.log(state);
-        console.log(city);
-        console.log(country);
+    const createOrder = async () => {
+        if(!fullName || !email || !mobile || !address || !city || !state || !country){
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields!',
+                text: 'All Fields are required before checkout',
+            })
+        } else {
+            try{
+                const formdata = new FormData()
+                formdata.append('full_name', fullName)
+                formdata.append('email', email)
+                formdata.append('mobile', mobile)
+                formdata.append('address', address)
+                formdata.append('city', city)
+                formdata.append('state', state)
+                formdata.append('country', country)
+                formdata.append('cart_id', card_id)
+                formdata.append('user_id', userData? userData?.user_id : 0)
+
+                const response = await apiInstance.post('create-order/', formdata)
+                
+                navigate(`/checkout/${response.data.order_oid}`)
+            }
+
+            catch (error) {
+                console.log(error)
+            }
+
+        }    
     }
 
 
