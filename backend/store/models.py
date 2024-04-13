@@ -202,6 +202,8 @@ class CartOrderItem (models.Model):
     size = models.CharField(max_length=100, null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
 
+
+    coupon = models.ManyToManyField("store.Coupon", blank=True)
     initial_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     saved = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     oid= ShortUUIDField(unique=True, length=10, alphabet="abcde12345")
@@ -284,7 +286,7 @@ class Notification(models.Model):
             return f"Notification - {self.pk}"
 
 class Coupon(models.Model):
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     user_by = models.ManyToManyField(User, blank=True)
     code = models.CharField(max_length=1000)
     discount = models.IntegerField(default = 1)

@@ -31,5 +31,6 @@ admin.site.register(Cart)
 admin.site.register(CartOrder)
 admin.site.register(CartOrderItem)
 admin.site.register(Tax)
+admin.site.register(Coupon)
 
 
