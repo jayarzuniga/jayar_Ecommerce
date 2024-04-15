@@ -17,6 +17,7 @@ import Products from "./views/store/Products";
 import ProductDetail from "./views/store/ProductDetail";
 import Cart from "./views/store/Cart";
 import Checkout from "./views/store/Checkout";
+import PaymentSuccess from "./views/store/PaymentSuccess";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -38,6 +39,7 @@ function App() {
         <Route path="/product-detail/:slug/" element={<ProductDetail />} />
         <Route path="/cart/" element={<Cart />} />
         <Route path="/checkout/:order_oid" element={<Checkout />} />
+        <Route path="/payment-success/:order_oid/" element={<PaymentSuccess />} />
 
 
 
