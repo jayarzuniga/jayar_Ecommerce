@@ -23,13 +23,19 @@ class ProductAdmin (admin.ModelAdmin):
     list_editable = ["featured"]
     search_fields = ['title']
 
+class CartOrderAdmin (admin.ModelAdmin):
+    list_display =['oid', 'payment_status', 'total']
+    search_fields = ['title']
+
+
 
 
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart)
-admin.site.register(CartOrder)
-admin.site.register(CartOrderItem)
+admin.site.register(CartOrder,CartOrderAdmin)
+admin.site.register(CartOrderItem )
+admin.site.register(Review)
 admin.site.register(Tax)
 admin.site.register(Coupon)
 

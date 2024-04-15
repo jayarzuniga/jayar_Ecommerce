@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 
 function PaymentSuccess() {
     const [order, setOrder] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [status, setStatus] = useState("Verifying Payment...")
 
     const param = useParams()
     
@@ -17,7 +17,27 @@ function PaymentSuccess() {
         })
     },[])
 
-    console.log(sessionId);
+    useEffect(()=>{
+        const formdata = new FormData()
+        formdata.append("order_oid", param?.order_oid)
+        formdata.append("session_id", sessionId)
+        
+        setStatus("Verifying Payment...")
+
+        apiInstance.post(`payment-success/${order.oid}/`, formdata).then((res)=>{
+            if (res.data.message === "Payment Successfull"){
+                setStatus("Payment Successfull")
+            }
+            if (res.data.message === "Payment Already Successful"){
+                setStatus("Payment Already Successful")
+            }
+            if (res.data.message === "Your Payment Is Unpaid"){
+                setStatus("Your Payment Is Unpaid")
+            }
+
+          
+        })
+    }, [param?.order_oid])
 
   return (
     <div>
@@ -41,43 +61,165 @@ function PaymentSuccess() {
               <div className="application_statics">
                 <div className="account_user_deails dashboard_page">
                   <div className="d-flex justify-content-center align-items-center">
-                    <div className="col-lg-12">
-                      <div className="border border-3 border-success" />
-                      <div className="card bg-white shadow p-5">
-                        <div className="mb-4 text-center">
-                          <i
-                            className="fas fa-check-circle text-success"
-                            style={{ fontSize: 100, color: "green" }}
-                          />
-                        </div>
-                        <div className="text-center">
-                          <h1>Thank You !</h1>
-                          <p>
-                            Your checkout was successfull, we have sent the
-                            order detail to your email<b>({order.email})</b>
-                          </p>
-                          <button
-                            className="btn btn-success mt-3"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                          >
-                            View Order <i className="fas fa-eye" />{" "}
-                          </button>
-                          <a
-                            href="/"
-                            className="btn btn-primary mt-3 ms-2"
-                          >
-                            Download Invoice{" "}
-                            <i className="fas fa-file-invoice" />{" "}
-                          </a>
-                          <a
-                            className="btn btn-secondary mt-3 ms-2"
-                          >
-                            Go Home <i className="fas fa-fa-arrow-left" />{" "}
-                          </a>
+{status === "Verifying Payment..." && (
+                        <div className="col-lg-12">
+                        <div className="border border-3 border-success" />
+                        <div className="card bg-white shadow p-5">
+                          <div className="mb-4 text-center">
+                            <i
+                              className="fas fa-check-circle text-success"
+                              style={{ fontSize: 100, color: "green" }}
+                            />
+                          </div>
+                          <div className="text-center">
+                            <h1>Payment Verifying... <i className="fas fa-spinner fa-spin" /></h1>
+                            <p>
+                              Please hold on, while we verify your payment<br/>
+                              Note: Do not reload or leave the page
+                            </p>
+                            <button
+                              className="btn btn-success mt-3"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal"
+                            >
+                              View Order <i className="fas fa-eye" />{" "}
+                            </button>
+                            <a
+                              href="/"
+                              className="btn btn-primary mt-3 ms-2"
+                            >
+                              Download Invoice{" "}
+                              <i className="fas fa-file-invoice" />{" "}
+                            </a>
+                            <a
+                              className="btn btn-secondary mt-3 ms-2"
+                            >
+                              Go Home <i className="fas fa-fa-arrow-left" />{" "}
+                            </a>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
+
+{status === "Payment Successfull" && (
+                        <div className="col-lg-12">
+                        <div className="border border-3 border-success" />
+                        <div className="card bg-white shadow p-5">
+                          <div className="mb-4 text-center">
+                            <i
+                              className="fas fa-check-circle text-success"
+                              style={{ fontSize: 100, color: "green" }}
+                            />
+                          </div>
+                          <div className="text-center">
+                            <h1>Thank You!</h1>
+                            <p>
+                              Your checkout was successfull, we have sent the
+                              order detail to your email<b>({order.email})</b>
+                            </p>
+                            <button
+                              className="btn btn-success mt-3"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal"
+                            >
+                              View Order <i className="fas fa-eye" />{" "}
+                            </button>
+                            <a
+                              href="/"
+                              className="btn btn-primary mt-3 ms-2"
+                            >
+                              Download Invoice{" "}
+                              <i className="fas fa-file-invoice" />{" "}
+                            </a>
+                            <a
+                              className="btn btn-secondary mt-3 ms-2"
+                            >
+                              Go Home <i className="fas fa-fa-arrow-left" />{" "}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+{status === "Payment Already Successful" && (
+                        <div className="col-lg-12">
+                        <div className="border border-3 border-success" />
+                        <div className="card bg-white shadow p-5">
+                          <div className="mb-4 text-center">
+                            <i
+                              className="fas fa-check-circle text-success"
+                              style={{ fontSize: 100, color: "green" }}
+                            />
+                          </div>
+                          <div className="text-center">
+                            <h1> Already Paid <i className="fas fa-spinner fa-spin" /></h1>
+                            <p>
+                              Please hold on, while we verify your payment<br/>
+                              Note: Do not reload or leave the page
+                            </p>
+                            <button
+                              className="btn btn-success mt-3"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal"
+                            >
+                              View Order <i className="fas fa-eye" />{" "}
+                            </button>
+                            <a
+                              href="/"
+                              className="btn btn-primary mt-3 ms-2"
+                            >
+                              Download Invoice{" "}
+                              <i className="fas fa-file-invoice" />{" "}
+                            </a>
+                            <a
+                              className="btn btn-secondary mt-3 ms-2"
+                            >
+                              Go Home <i className="fas fa-fa-arrow-left" />{" "}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+{status === "Your Payment Is Unpaid" && (
+                        <div className="col-lg-12">
+                        <div className="border border-3 border-success" />
+                        <div className="card bg-white shadow p-5">
+                          <div className="mb-4 text-center">
+                            <i
+                              className="fas fa-check-circle text-success"
+                              style={{ fontSize: 100, color: "green" }}
+                            />
+                          </div>
+                          <div className="text-center">
+                            <h1>Unpaid Invoice <i className="fas fa-ban" /></h1>
+                            <p>
+                              Note: Please try making the payment again
+                            </p>
+                            <button
+                              className="btn btn-success mt-3"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal"
+                            >
+                              View Order <i className="fas fa-eye" />{" "}
+                            </button>
+                            <a
+                              href="/"
+                              className="btn btn-primary mt-3 ms-2"
+                            >
+                              Download Invoice{" "}
+                              <i className="fas fa-file-invoice" />{" "}
+                            </a>
+                            <a
+                              className="btn btn-secondary mt-3 ms-2"
+                            >
+                              Go Home <i className="fas fa-fa-arrow-left" />{" "}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
                   </div>
                 </div>
               </div>

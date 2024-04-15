@@ -162,7 +162,7 @@ class CartOrder (models.Model):
     total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
 
     payment_status = models.CharField(choices = PAYMENT_STATUS, max_length=100, default="pending")
-    payment_status = models.CharField(choices = ORDER_STATUS, max_length=100, default="pending")
+    order_status = models.CharField(choices = ORDER_STATUS, max_length=100, default="pending")
 
     initial_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     saved = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
