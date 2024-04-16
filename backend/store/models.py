@@ -204,7 +204,6 @@ class CartOrderItem (models.Model):
     size = models.CharField(max_length=100, null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
 
-
     coupon = models.ManyToManyField("store.Coupon", blank=True)
     initial_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     saved = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
@@ -214,7 +213,6 @@ class CartOrderItem (models.Model):
     def __str__(self):
         return self.oid
     
-
 class ProductFaq(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -298,7 +296,6 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
     
-
 class Tax(models.Model):
     country= models.CharField( max_length=50)
     rate = models.IntegerField(default=5, help_text="Numbers added here are in percentage e.g 5%")
@@ -311,4 +308,4 @@ class Tax(models.Model):
     class Meta:
         verbose_name_plural = "Taxes"
         ordering = ['country']
-    
+
