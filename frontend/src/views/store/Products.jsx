@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+
+import { CartContext } from "../plugin/Context";
 
 import apiInstance from "../../utils/axios";
 import { Link } from "react-router-dom";
@@ -18,6 +20,7 @@ const Toast = Swal.mixin ({
 function Products() {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
+  const [cartCount, setCartCount] = useContext(CartContext)
 
   const[colorValue, setColorValue] = useState("No Color");
   const[sizeValue, setSizeValue] = useState("No Size");
@@ -80,12 +83,17 @@ function Products() {
       formdata.append('price', price)
       formdata.append('shipping_amount', shipping_amount)
       formdata.append('cart_id', cart_id)
+
       const response = await apiInstance.post(`cart-view/`, formdata);
-      console.log(response.data);
 
       Toast.fire({
         icon: 'success',
         title: response.data.message,
+      })
+
+      const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/` : `cart-list/${cart_id}/`
+      apiInstance.get(url).then((res) => {
+        setCartCount(res.data.length)
       })
     } catch (error) {
       console.log(error);

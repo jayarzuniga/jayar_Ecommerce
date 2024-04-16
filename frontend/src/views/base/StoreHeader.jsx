@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { CartContext } from '../plugin/Context';
 
 function StoreHeader() {
     const navigate = useNavigate();
+    const cartCount = useContext(CartContext)
+
 
     const [isLoggedIn, user] = useAuthStore((state) => [
         state.isLoggedIn,
@@ -78,7 +81,7 @@ function StoreHeader() {
                             <Link className="btn btn-primary me-2" to="/register">Register</Link>
                             </>
                         }
-                       <Link className="btn btn-danger" to="/cart/"><i className='fas fa-shopping-cart'></i> <span id='cart-total-items'>0</span></Link>
+                       <Link className="btn btn-danger" to="/cart/"><i className='fas fa-shopping-cart'></i> <span id='cart-total-items'>{cartCount}</span></Link>
                         
                     </div>
                 </div>

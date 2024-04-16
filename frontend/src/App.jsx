@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
@@ -19,14 +19,30 @@ import Cart from "./views/store/Cart";
 import Checkout from "./views/store/Checkout";
 import PaymentSuccess from "./views/store/PaymentSuccess";
 import Search from "./views/store/Search";
+import { CartContext } from "./views/plugin/Context";
+import CardId from "./views/plugin/CardId";
+import UserData from "./views/plugin/UserData";
+import apiInstance from "./utils/axios";
 
 function App() {
   const [count, setCount] = useState(0);
+  const [cartCount, setCartCount] = useState();
+
+  const cart_id = CardId();
+  const userData = UserData();
+
+  useEffect(() => {
+    const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/` : `cart-list/${cart_id}/`
+    apiInstance.get(url).then((res) => {
+      setCartCount(res.data.length)
+    })
+  })
 
   return (
+    <CartContext.Provider value={[cartCount,setCartCount]}>
+
     <BrowserRouter>
       <StoreHeader />
-
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -48,6 +64,8 @@ function App() {
       </Routes>
       <StoreFooter />
     </BrowserRouter>
+
+    </CartContext.Provider>
   );
 }
 

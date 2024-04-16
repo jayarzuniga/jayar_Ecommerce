@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import apiInstance from "../../utils/axios";
@@ -6,8 +6,10 @@ import apiInstance from "../../utils/axios";
 import GetCurrentAddress from "../plugin/UserCountry";
 import UserData from "../plugin/UserData";
 import CardId from "../plugin/CardId";
+import { CartContext } from "../plugin/Context";
 
 import moment from "moment";
+
 
 
 function ProductDetail() {
@@ -26,12 +28,14 @@ function ProductDetail() {
         user_id: 0, product_id: product?.id, review: "", rating: 0,
     });
 
+    const [cartCount, setCartCount]= useContext(CartContext)
+
     const param = useParams();
     const currentAddress = GetCurrentAddress();
     const userData = UserData();
-    const cardID = CardId();
+    const cart_id = CardId();
 
-    console.log(userData?.username)
+
 
     const colorHandler = (e) => {
         const colorNameInput = e.target
@@ -65,20 +69,24 @@ function ProductDetail() {
             formdata.append('qty', quantity)
             formdata.append('color', colorValue)
             formdata.append('size', sizeValue)
-            formdata.append('product_id', product_id)
+            formdata.append('product_id', product.id)
             formdata.append('user_id', userData.user_id)
             formdata.append('country', currentAddress.country)
             formdata.append('price', product.price)
             formdata.append('shipping_amount', product.shipping_amount)
-            formdata.append('cart_id', cardID)
+            formdata.append('cart_id', cart_id)
 
-            const response = await apiInstance.post(`cart-view/`, formdata)
-            console.log(response.data);
-
+            //Make a post request to cart api
+            await apiInstance.post(`cart-view/`, formdata)
+            //Fetch updated cart items
+            const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/` : `cart-list/${cart_id}/`
+            apiInstance.get(url).then((res) => {
+                setCartCount(res.data.length)
+            })
+             
         } catch (error) {
             console.log(error)
         }
-
     }
 
     useEffect(() => {
