@@ -5,8 +5,8 @@ from django.template.loader import render_to_string
 
 from userauths.models import User
 
-from store.models import Product, Category, Cart, Tax, CartOrder, CartOrderItem, Coupon, Notification
-from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer
+from store.models import Product, Category, Cart, Tax, CartOrder, CartOrderItem, Coupon, Notification, Review
+from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer, ReviewSerializer
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -475,5 +475,35 @@ class PaymentSuccessView(generics.CreateAPIView):
           else:
                session = None
                     
+class ReviewListAPIView(generics.ListCreateAPIView):
+     queryset = Review.objects.all()
+     serializer_class = ReviewSerializer
+     permission_classes = [AllowAny]
 
-                    
+     def get_queryset(self):
+          product_id = self.kwargs['product_id']
+
+          product = Product.objects.get(id=product_id)
+          reviews = Review.objects.filter(product=product)
+          return reviews
+     
+     def create(self, request, *args, **kwargs):
+          payload = request.data
+
+          user_id = payload['user_id']
+          product_id = payload['product_id']
+          rating = payload ['rating']
+          review = payload['review']
+
+          user = User.objects.get(id=user_id)
+          product = Product.objects.get(id=product_id)
+
+          Review.objects.create(
+               user=user,
+               product=product,
+               rating=rating,
+               review=review
+          )
+
+          return Response({"message": "Review Created Successfully"}, status=status.HTTP_200_OK)
+          
