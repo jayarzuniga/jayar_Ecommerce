@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from userauths.models import User
 
-from store.models import Product, Category, Cart, Tax
-from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon
+from store.models import Product, Category, Cart, Tax, CartOrder, CartOrderItem, Coupon, Notification
+from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -15,6 +17,14 @@ from decimal import Decimal
 import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+def send_notification(user=None, vendor=None, order=None, order_item=None):
+     Notification.objects.create(
+          user=user, 
+          vendor=vendor, 
+          order=order, 
+          order_item=order_item
+          )
 
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -402,6 +412,56 @@ class PaymentSuccessView(generics.CreateAPIView):
                     if order.payment_status == "pending":
                         order.payment_status = "paid"
                         order.save()
+
+                        #Send Notifications to Customers
+                        if order.buyer != None:
+                            send_notification(user=order.buyer, order=order)
+
+                        
+                        #Send Notifications to Vendor
+                        for o in order_items:
+                            send_notification(vendor=o.vendor, order=order, order_item=o)
+
+                             #Send Email to Vendor
+                            context ={
+                                'order': order,
+                                'order_items': order_items,
+                                'vendor': o.vendor,
+                            }
+                            subject = "New Sale"
+                            text_body = render_to_string('email/vendor_sale.txt', context)
+                            html_body = render_to_string('email/vendor_sale.html', context)
+
+                            msg = EmailMultiAlternatives(
+                                subject=subject,
+                                from_email=settings.FROM_EMAIL,
+                                to=[o.vendor.user.email],
+                                body=text_body,
+                            )
+                            msg.attach_alternative(html_body, 'text/html')
+                            msg.send()
+
+                        #Send Email to Buyer
+                        context ={
+                             'order': order,
+                             'order_items': order_items,
+                        }
+                        subject = "Order Placed Successfully"
+                        text_body = render_to_string('email/customer_order_confirmation.txt', context)
+                        html_body = render_to_string('email/customer_order_confirmation.html', context)
+
+                        msg = EmailMultiAlternatives(
+                             subject=subject,
+                             from_email=settings.FROM_EMAIL,
+                             to=[order.email],
+                             body=text_body,
+                        )
+                        msg.attach_alternative(html_body, 'text/html')
+                        msg.send()
+
+                        
+                        
+
                         return Response({"message": "Payment Successful"}, status=status.HTTP_200_OK)
                     else:
                         return Response({"message": "Payment Already Successful"}, status=status.HTTP_200_OK)
