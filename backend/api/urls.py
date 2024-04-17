@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from userauths import views as userauths_views
 from store import views as store_views
+from customer import views as customer_views
 
 
 
@@ -31,9 +32,13 @@ urlpatterns = [
     path('reviews/<product_id>/', store_views.ReviewListAPIView.as_view()),
     path('search/', store_views.SearchProductAPIView.as_view()),
     
-
     #Payment Endpoints
     path('stripe-checkout/<order_oid>/', store_views.StripeCheckoutView.as_view()),
     path('payment-success/<order_oid>/', store_views.PaymentSuccessView.as_view()),
+
+    #Customer Endpoints
+    path('customer/orders/<user_id>/', customer_views.OrdersAPIView.as_view()),
+    path('customer/order/<user_id>/<order_oid>/', customer_views.OrdersAPIView.as_view()),
+
 
 ]

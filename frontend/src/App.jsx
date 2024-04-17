@@ -23,6 +23,7 @@ import { CartContext } from "./views/plugin/Context";
 import CardId from "./views/plugin/CardId";
 import UserData from "./views/plugin/UserData";
 import apiInstance from "./utils/axios";
+import Account from "./views/customer/Account";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -58,6 +59,9 @@ function App() {
         <Route path="/checkout/:order_oid" element={<Checkout />} />
         <Route path="/payment-success/:order_oid/" element={<PaymentSuccess />} />
         <Route path="/search/" element={<Search />} />
+
+        {/*Customer Routes */}
+        <Route path="/customer/account" element={<Account />} />
 
 
 
