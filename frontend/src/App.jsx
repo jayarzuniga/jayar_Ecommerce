@@ -25,6 +25,8 @@ import UserData from "./views/plugin/UserData";
 import apiInstance from "./utils/axios";
 import Account from "./views/customer/Account";
 
+import PrivateRoute from './layout/PrivateRoute'
+
 function App() {
   const [count, setCount] = useState(0);
   const [cartCount, setCartCount] = useState();
@@ -44,7 +46,9 @@ function App() {
 
     <BrowserRouter>
       <StoreHeader />
+      <MainWrapper>
       <Routes>
+        
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -57,16 +61,17 @@ function App() {
         <Route path="/product-detail/:slug/" element={<ProductDetail />} />
         <Route path="/cart/" element={<Cart />} />
         <Route path="/checkout/:order_oid" element={<Checkout />} />
-        <Route path="/payment-success/:order_oid/" element={<PaymentSuccess />} />
+        <Route path="/payment-success/:order_oid/" element={ <PaymentSuccess /> } />
         <Route path="/search/" element={<Search />} />
 
         {/*Customer Routes */}
-        <Route path="/customer/account" element={<Account />} />
+        <Route path="/customer/account" element={<PrivateRoute> <Account /> </PrivateRoute> }/>
 
 
 
       </Routes>
       <StoreFooter />
+      </MainWrapper>
     </BrowserRouter>
 
     </CartContext.Provider>

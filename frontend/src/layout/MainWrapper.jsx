@@ -6,7 +6,7 @@ import React from 'react'
 const MainWrapper = ({children}) => {
     const [loading, setLoading] = useState(true)
 
-    useEffect(async()=> {
+    useEffect(()=> {
         const handler = async () => {
             setLoading(true)
             await setUser()

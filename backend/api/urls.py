@@ -40,6 +40,4 @@ urlpatterns = [
     #Customer Endpoints
     path('customer/orders/<user_id>/', customer_views.OrdersAPIView.as_view()),
     path('customer/order/<user_id>/<order_oid>/', customer_views.OrdersAPIView.as_view()),
-
-
 ]
