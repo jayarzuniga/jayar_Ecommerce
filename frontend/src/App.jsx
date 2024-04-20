@@ -28,6 +28,7 @@ import Checkout from "./views/store/Checkout";
 
 import Account from "./views/customer/Account";
 import Order from "./views/customer/Order";
+import OrderDetail from "./views/customer/OrderDetail";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -69,6 +70,8 @@ function App() {
         {/*Customer Routes */}
         <Route path="/customer/account/" element={<PrivateRoute> <Account /> </PrivateRoute> }/>
         <Route path="/customer/orders/" element={<PrivateRoute> <Order /> </PrivateRoute> }/>
+        <Route path="/customer/orders/:order_oid/" element={<PrivateRoute> <OrderDetail /> </PrivateRoute> }/>
+
 
 
 

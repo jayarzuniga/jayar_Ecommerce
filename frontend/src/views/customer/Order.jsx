@@ -166,12 +166,13 @@ function Order() {
                                                                 <span className="fw-normal mb-1">{o.total}</span>
                                                             </td>
                                                             <td>
-                                                                <button
-                                                                    type="button"
+                                                                <Link
+                                                                    to={`${o.oid}/`}
                                                                     className="btn btn-link btn-sm btn-rounded"
                                                                 >
                                                                     View <i className="fas fa-eye" />
-                                                                </button>
+                                                           
+                                                                </Link>
                                                             </td>
                                                         </tr>
                                                         ))}
