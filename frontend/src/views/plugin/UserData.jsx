@@ -11,6 +11,7 @@ function UserData() {
         return decoded
     }else{
         console.log("User Token doesn't exist")
+        return null
     }
 }
 

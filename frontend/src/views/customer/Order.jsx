@@ -22,6 +22,12 @@ function Order() {
             })
     }, [])
 
+    const statusCounts = orders.reduce((counts, order) => {
+        const status = order.order_status
+        counts[status] = (counts[status] || 0) + 1
+        return counts
+    }, {})
+
     return (
         <main className="mt-5">
             <div className="container">
@@ -47,7 +53,7 @@ function Order() {
                                                             <div className="">
                                                                 <p className="mb-1">Orders</p>
                                                                 <h2 className="mb-0">
-                                                                    9
+                                                                    {orders.length}
                                                                     <span
                                                                         className=""
                                                                         style={{ fontSize: "0.875rem" }}
@@ -76,7 +82,7 @@ function Order() {
                                                             <div className="">
                                                                 <p className="mb-1">Pending Delivery</p>
                                                                 <h2 className="mb-0">
-                                                                    6
+                                                                    {statusCounts.pending}
                                                                     <span
                                                                         className=""
                                                                         style={{ fontSize: "0.875rem" }}
@@ -105,7 +111,7 @@ function Order() {
                                                             <div className="">
                                                                 <p className="mb-1">Fulfilled Orders</p>
                                                                 <h2 className="mb-0">
-                                                                    2
+                                                                    {statusCounts.fulfilled || 0}
                                                                     <span
                                                                         className=""
                                                                         style={{ fontSize: "0.875rem" }}
