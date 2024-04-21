@@ -39,4 +39,5 @@ admin.site.register(Review)
 admin.site.register(Tax)
 admin.site.register(Coupon)
 admin.site.register(Notification)
+admin.site.register(Wishlist)
 
