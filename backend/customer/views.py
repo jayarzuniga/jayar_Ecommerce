@@ -79,3 +79,32 @@ class WishListAPIView(generics.ListCreateAPIView):
         else:
             Wishlist.objects.create(product = product, user = user)
             return Response({"message": "Added to wishlist"}, status=status.HTTP_201_CREATED)
+        
+class CustomerNotification (generics.ListAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(id=user_id)
+
+        notifications = Notification.objects.filter(user=user)
+        return notifications
+    
+class MarkNotificationAsSeen(generics.RetrieveAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        notification_id = self.kwargs['notification_id']
+
+        user = User.objects.get(id=user_id)
+        notification = Notification.objects.get(id=notification_id, user=user)
+
+        if notification.seen != True:
+            notification.seen = True
+            notification.save()
+        
+        return notification
+        
