@@ -47,25 +47,25 @@ function Sidebar() {
                 <li className="list-group-item d-flex justify-content-between align-items-start">
                     <div className="ms-2 me-auto">
                         <div className="fw-bold">
-                            <Link to='/customer/orders/'>Orders</Link>
+                            <Link to='/customer/orders/' className='text-dark'>Orders</Link>
                             </div>
                     </div>
                     <span className="badge bg-primary rounded-pill">14</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-start">
                     <div className="ms-2 me-auto">
-                        <div className="fw-bold"><Link to='/customer/wishlist/'>Wishlist</Link></div>
+                        <div className="fw-bold"><Link to='/customer/wishlist/' className='text-dark'>Wishlist</Link></div>
                     </div>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-start">
                     <div className="ms-2 me-auto">
-                        <div className="fw-bold"><Link to='/customer/notifications/'>Notifications</Link></div>
+                        <div className="fw-bold"><Link to='/customer/notifications/' className='text-dark'>Notifications</Link></div>
                     </div>
                     <span className="badge bg-primary rounded-pill">14</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-start">
                     <div className="ms-2 me-auto">
-                        <div className="fw-bold">Setting</div>
+                        <div className="fw-bold"><Link to='/customer/settings/' className='text-dark'>Settings</Link></div>
                     </div>
                 </li>
             </ol>

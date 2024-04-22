@@ -41,7 +41,7 @@ class OrderDetailAPIView(generics.RetrieveAPIView):
         order = CartOrder.objects.get(buyer=user, oid=order_oid, payment_status='paid')
         return order
     
-class ProfileView(generics.RetrieveAPIView):
+class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [AllowAny]
 

@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
 from userauths.models import User, Profile
-from userauths.serializer import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
+from userauths.serializer import MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer, ProfileSerializer
 
 import shortuuid
 import random
@@ -89,3 +89,15 @@ class PasswordChangeView(generics.CreateAPIView):
             return Response( {"message": "Password Changed Successfully"}, status=status.HTTP_201_CREATED)
         else:
             return Response( {"message": "An Error Occured"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+
+        user = User.objects.get(id=user_id)
+        profile = Profile.objects.get(user=user)
+        return profile
+    
