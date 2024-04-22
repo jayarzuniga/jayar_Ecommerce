@@ -4,7 +4,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Login from "./views/auth/Login";
 import Register from "./views/auth/Register";
-import Dashboard from "./views/auth/Dashboard";
+
 import Logout from "./views/auth/Logout";
 import ForgotPassword from "./views/auth/ForgotPassword";
 import CreatePassword from "./views/auth/CreatePassword";
@@ -33,6 +33,8 @@ import Wishlist from "./views/customer/Wishlist";
 import CustomerNotification from "./views/customer/CustomerNotification";
 import CustomerSettings from "./views/customer/CustomerSettings";
 import Invoice from "./views/customer/Invoice";
+
+import Dashboard from "./views/vendor/Dashboard";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -80,8 +82,8 @@ function App() {
         <Route path="/customer/settings/" element={<PrivateRoute> <CustomerSettings /> </PrivateRoute> }/>
         <Route path="/customer/invoice/:order_oid/" element={<PrivateRoute> <Invoice /> </PrivateRoute> }/>
 
-
-
+        {/*Customer Routes */}
+        <Route path="/vendor/dashboard/" element={<PrivateRoute> <Dashboard /> </PrivateRoute> }/>
 
       </Routes>
       <StoreFooter />

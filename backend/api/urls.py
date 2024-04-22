@@ -6,6 +6,8 @@ from userauths import views as userauths_views
 from store import views as store_views
 from customer import views as customer_views
 
+from vendor import views as vendor_views
+
 
 
 urlpatterns = [
@@ -43,4 +45,8 @@ urlpatterns = [
     path('customer/wishlist/<user_id>/', customer_views.WishListAPIView.as_view()),
     path('customer/notification/<user_id>/', customer_views.CustomerNotification.as_view()),
     path('customer/notification/<user_id>/<notification_id>/', customer_views.MarkNotificationAsSeen.as_view()),
+
+    #Vendor Endpoints
+    path('vendor/stats/<vendor_id>/', vendor_views.DashboardStatsAPIView.as_view()),
+    
 ]
