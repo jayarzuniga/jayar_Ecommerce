@@ -9,7 +9,7 @@ from userauths.models import User, Profile
 from userauths.serializer import ProfileSerializer
 
 from store.models import Product, Category, Cart, Tax, CartOrder, CartOrderItem, Coupon, Notification, Review, Wishlist
-from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer, ReviewSerializer, WishlistSerializer, SummarySerializer, EarningSerializer
+from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer, ReviewSerializer, WishlistSerializer, SummarySerializer, EarningSerializer, CouponSummarySerializer
 
 from vendor.models import Vendor
 
@@ -177,7 +177,7 @@ class ReviewDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [AllowAny] 
 
-    def get_queryset(self):
+    def get_object(self):
         vendor_id = self.kwargs['vendor_id']
         review_id = self.kwargs['review_id']
 
@@ -185,3 +185,63 @@ class ReviewDetailAPIView(generics.RetrieveAPIView):
         review = Review.objects.get(id=review_id, product__vendor=vendor)
         
         return review
+    
+class CouponListCreateAPIView(generics.ListAPIView):
+    serializer_class = CouponSerializer
+    permission_classes = [AllowAny] 
+
+    def get_queryset(self):
+        vendor_id = self.kwargs['vendor_id']
+        vendor = Vendor.objects.get(id=vendor_id)
+
+        return Coupon.objects.filter(vendor=vendor)
+    
+    def create(self, request, *args, **kwargs):
+        payload = request.data
+        vendor = payload ['vendor_id']
+        code = payload['code']
+        discount = payload['discount']
+        active = payload['active']
+
+        vendor = Vendor.objects.get(id=vendor)
+        Coupon.objects.create(
+            vendor=vendor,
+            code=code,
+            discount=discount,
+            active=(active.lower() == "true"),
+        )
+        return Response({'message':"Coupon Created Successfully"}, status=status.HTTP_201_CREATED)
+    
+class CouponDetailAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = CouponSerializer
+    permission_classes = [AllowAny] 
+
+    def get_object(self):
+        vendor_id = self.kwargs['vendor_id']
+        coupon_id = self.kwargs['coupon_id']
+
+        vendor = Vendor.objects.get(id=vendor_id)
+        coupon = Coupon.objects.get(id=coupon_id, vendor=vendor)
+        
+        return coupon
+    
+class CouponStatsAPIView (generics.ListAPIView):
+    serializer_class = CouponSummarySerializer
+    permission_classes = [AllowAny] 
+
+    def get_queryset(self):
+        vendor_id = self.kwargs['vendor_id']
+        vendor = Vendor.objects.get(id=vendor_id)
+
+        total_coupons = Coupon.objects.filter(vendor=vendor).count()
+        active_coupons = Coupon.objects.filter(vendor=vendor, active=True).count()
+
+        return [{
+            'total_coupons': total_coupons,
+            'active_coupons': active_coupons,
+        }]
+    
+    def list(self, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
