@@ -49,9 +49,43 @@ JayR E-commerce Website is an online platform developed using React for the fron
    cd JayR-Ecommerce-Website
 
 3. Install frontend dependencies:
-  ```bash
-  cd frontend
-  yarn install
+   
+   ```bash
+   cd frontend
+   yarn install
+
+4. Install backend dependencies:
+
+   ```bash
+   cd ..
+   cd backend
+   pip install -r requirements.txt
+
+5. Set up the database:
+   
+   ```bash
+   python manage.py migrate
+
+7. Run the development server:
+   
+   ```bash
+   python manage.py runserver
+   
+9. Access another terminal and run frontend development
+
+   ```bash
+   cd frontend
+   yarn dev
+   
+10. Access the website in your browser:
+
+   ```bash
+   http://localhost:5173/
+
+
+   
+
+   
 
 
 
