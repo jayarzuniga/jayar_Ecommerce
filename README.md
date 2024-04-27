@@ -81,13 +81,3 @@ JayR E-commerce Website is an online platform developed using React for the fron
 
    ```bash
    http://localhost:5173/
-
-
-   
-
-   
-
-
-
-
-
