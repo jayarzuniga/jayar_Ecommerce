@@ -43,6 +43,17 @@ JayR E-commerce Website is an online platform developed using React for the fron
    ```bash
    git clone <repository_url>
 
-2.Navigate to the project directory:
+2. Navigate to the project directory:
+
+   ```bash
    cd JayR-Ecommerce-Website
+
+3. Install frontend dependencies:
+  ```bash
+  cd frontend
+  yarn install
+
+
+
+
 
