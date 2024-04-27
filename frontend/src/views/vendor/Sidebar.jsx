@@ -1,22 +1,28 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 function Sidebar() {
+    const location = useLocation()
+
+    const isActiveLink = (currentPath, linkPath) => {
+        return currentPath.includes(linkPath)
+    }
+
     return (
         <div className="col-md-3 col-lg-2 sidebar-offcanvas bg-dark navbar-dark" id="sidebar" role="navigation" >
             <ul className="nav nav-pills flex-column mb-auto nav flex-column pl-1 pt-2">
                 <li className="mb-3">
-                    <Link to="/vendor/dashboard/" className={"nav-link text-white active"}>
+                    <Link to="/vendor/dashboard/" className={isActiveLink(location.pathname, "/vendor/dashboard/") ? "nav-link text-white active" : "nav-link text-white"}>
                         <i className="bi bi-speedometer" /> Dashboard{" "}
                     </Link>
                 </li>
                 <li className="mb-3">
-                    <Link to="/vendor/products/" className={"nav-link text-white"}>
+                    <Link to="/vendor/products/" className={isActiveLink(location.pathname, "/vendor/products/") ? "nav-link text-white active" : "nav-link text-white"}>
                         <i className="bi bi-grid" /> Products{" "}
                     </Link>
                 </li>
                 <li className="mb-3">
-                    <Link to="/vendor/orders/" className={"nav-link text-white"}>
+                    <Link to="/vendor/orders/" className={isActiveLink(location.pathname, "/vendor/orders/") ? "nav-link text-white active" : "nav-link text-white"}>
                         <i className="bi bi-cart-check" /> Orders{" "}
                     </Link>
                 </li>

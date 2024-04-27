@@ -65,6 +65,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'size',
             'rating_count',
             'pid',
+            'orders',
             'slug',
             'date',         
         ]
@@ -228,7 +229,7 @@ class CouponSummarySerializer(serializers.Serializer):
     total_coupons = serializers.IntegerField()
     active_coupons = serializers.IntegerField()
 
-class NoptificationSummarySerializer(serializers.Serializer):
+class NotificationSummarySerializer(serializers.Serializer):
     un_read_notifications = serializers.IntegerField()
     read_notifications = serializers.IntegerField()
     all_notifications = serializers.IntegerField()

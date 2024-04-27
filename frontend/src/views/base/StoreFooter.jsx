@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
     return (
-        <footer className="bg-light text-center text-lg-start" style={{ marginTop: 200 }}>
+        <footer className="bg-light text-center text-lg-start">
             <div className="container p-4">
                 <div className="row">
                     <div className="col-md-6 mb-4 mb-md-0 d-flex justify-content-center justify-content-md-start align-items-center">

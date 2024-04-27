@@ -4,16 +4,22 @@ import apiInstance from '../../utils/axios'
 import UserData from "../plugin/UserData";
 import {Bar} from 'react-chartjs-2'
 import { Chart } from 'chart.js/auto';
+import { Link } from 'react-router-dom';
 function Dashboard() {
     const [stats, setStats] = useState([])
     const [orderChartData, setOrderChartData] = useState([])
     const [productChartData, setProductChartData] = useState([])
+    const [products, setProducts] = useState([])
 
     const userData = UserData()
 
     useEffect(() => {
         apiInstance.get(`/vendor/stats/${userData?.vendor_id}/`).then(res => {
             setStats(res.data[0])
+        })
+
+        apiInstance.get(`/vendor/products/${userData?.vendor_id}/`).then(res => {
+            setProducts(res.data);
         })
     }, [])
 
@@ -61,9 +67,6 @@ function Dashboard() {
             },
         ]   
     }
-
-    console.log(order_data, product_data);
-    console.log(order_months, order_counts);
 
     return (
         <div className="container-fluid" id="main">
@@ -176,7 +179,7 @@ function Dashboard() {
                                     <table className="table">
                                         <thead className="table-dark">
                                             <tr>
-                                                <th scope="col">#ID</th>
+                                                <th scope="col">Image</th>
                                                 <th scope="col">Name</th>
                                                 <th scope="col">Price</th>
                                                 <th scope="col">Quantity</th>
@@ -186,63 +189,31 @@ function Dashboard() {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {products?.map((p, index) => (
                                             <tr>
-                                                <th scope="row">#erituo</th>
-                                                <td>Turtle Neck Shirt</td>
-                                                <td>$20</td>
-                                                <td>14</td>
-                                                <td>26</td>
-                                                <td>Live</td>
-                                                <td>
-                                                    <a href="" className="btn btn-primary mb-1">
-                                                        <i className="fas fa-eye" />
-                                                    </a>
-                                                    <a href="" className="btn btn-success mb-1">
-                                                        <i className="fas fa-edit" />
-                                                    </a>
-                                                    <a href="" className="btn btn-danger mb-1">
-                                                        <i className="fas fa-trash" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">#erituo</th>
-                                                <td>Turtle Neck Shirt</td>
-                                                <td>$20</td>
-                                                <td>14</td>
-                                                <td>26</td>
-                                                <td>Live</td>
-                                                <td>
-                                                    <a href="" className="btn btn-primary mb-1">
-                                                        <i className="fas fa-eye" />
-                                                    </a>
-                                                    <a href="" className="btn btn-success mb-1">
-                                                        <i className="fas fa-edit" />
-                                                    </a>
-                                                    <a href="" className="btn btn-danger mb-1">
-                                                        <i className="fas fa-trash" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">#erituo</th>
-                                                <td>Turtle Neck Shirt</td>
-                                                <td>$20</td>
-                                                <td>14</td>
-                                                <td>26</td>
-                                                <td>Live</td>
-                                                <td>
-                                                    <a href="" className="btn btn-primary mb-1">
-                                                        <i className="fas fa-eye" />
-                                                    </a>
-                                                    <a href="" className="btn btn-success mb-1">
-                                                        <i className="fas fa-edit" />
-                                                    </a>
-                                                    <a href="" className="btn btn-danger mb-1">
-                                                        <i className="fas fa-trash" />
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            <th scope="row">
+                                                <img src={p.image} alt={p.title} style={{ width: 100, height: 100 , objectFit: 'cover', borderRadius: '10px'}}/>
+                                            </th>
+                                            <td>{p.title}</td>
+                                            <td>${p.price}</td>
+                                            <td>{p.stock_qty}</td>
+                                            <td>{p.orders}</td>
+                                            <td>{p.status?.toUpperCase()}</td>
+                                            <td>
+                                                <Link href="" className="btn btn-primary mb-1 me-2">
+                                                    <i className="fas fa-eye" />
+                                                </Link>
+                                                <Link href="" className="btn btn-success mb-1 me-2">
+                                                    <i className="fas fa-edit" />
+                                                </Link>
+                                                <Link href="" className="btn btn-danger mb-1">
+                                                    <i className="fas fa-trash" />
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                        ))}
+                                            
+
                                         </tbody>
                                     </table>
                                 </div>

@@ -9,7 +9,7 @@ from userauths.models import User, Profile
 from userauths.serializer import ProfileSerializer
 
 from store.models import Product, Category, Cart, Tax, CartOrder, CartOrderItem, Coupon, Notification, Review, Wishlist
-from store.serializers import ProductSerializer, NoptificationSummarySerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer, ReviewSerializer, WishlistSerializer, SummarySerializer, EarningSerializer, CouponSummarySerializer
+from store.serializers import ProductSerializer, VendorSerializer, NotificationSummarySerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CartOrder, CartOrderItem, CouponSerializer, Coupon, NotificationSerializer, ReviewSerializer, WishlistSerializer, SummarySerializer, EarningSerializer, CouponSummarySerializer
 
 from vendor.models import Vendor
 
@@ -265,7 +265,7 @@ class NotificationSeenAPIView (generics.ListAPIView):
         return Notification.objects.filter(vendor=vendor, seen=True).order_by('-id')
     
 class NotificationSummaryAPIView (generics.ListAPIView):
-    serializer_class = NoptificationSummarySerializer
+    serializer_class = NotificationSummarySerializer
     permission_classes = [AllowAny] 
 
     def get_queryset(self):
@@ -302,4 +302,34 @@ class NotificationVendorMarkAsSeenAPIView (generics.RetrieveAPIView):
         notification.save()
         
         return notification
+    
+class VendorProfileUpdateAPIView (generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [AllowAny]
 
+
+class ShopUpdateAPIView (generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = VendorSerializer
+    permission_classes = [AllowAny]
+
+class ShopAPIView (generics.RetrieveAPIView):
+    serializer_class = VendorSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        vendor_slug = self.kwargs['vendor_slug']
+        return Vendor.objects.get(slug=vendor_slug)
+
+class ShopProductAPIView (generics.ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        vendor_slug = self.kwargs['vendor_slug']
+        vendor = Vendor.objects.get(slug=vendor_slug)
+
+        products = Product.objects.filter(vendor=vendor)
+
+        return products

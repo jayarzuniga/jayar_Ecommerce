@@ -35,6 +35,9 @@ import CustomerSettings from "./views/customer/CustomerSettings";
 import Invoice from "./views/customer/Invoice";
 
 import Dashboard from "./views/vendor/Dashboard";
+import Product from "./views/vendor/Product";
+import VendorOrders from "./views/vendor/Orders";
+import VendorOrderDetail from "./views/vendor/OrderDetail";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -82,8 +85,11 @@ function App() {
         <Route path="/customer/settings/" element={<PrivateRoute> <CustomerSettings /> </PrivateRoute> }/>
         <Route path="/customer/invoice/:order_oid/" element={<PrivateRoute> <Invoice /> </PrivateRoute> }/>
 
-        {/*Customer Routes */}
+        {/*Vendor Routes */}
         <Route path="/vendor/dashboard/" element={<PrivateRoute> <Dashboard /> </PrivateRoute> }/>
+        <Route path="/vendor/products/" element={<PrivateRoute> <Product /> </PrivateRoute> }/>
+        <Route path="/vendor/orders/" element={<PrivateRoute> <VendorOrders /> </PrivateRoute> }/>
+        <Route path="/vendor/orders-detail/" element={<PrivateRoute> <VendorOrderDetail /> </PrivateRoute> }/>
 
       </Routes>
       <StoreFooter />
