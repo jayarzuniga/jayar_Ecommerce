@@ -21,8 +21,6 @@ function OrderDetail() {
             });
     }, []);
 
-    console.log(order);
-    // console.log(orderItems);
 
     return (
         <main className="mt-5">

@@ -89,7 +89,7 @@ function App() {
         <Route path="/vendor/dashboard/" element={<PrivateRoute> <Dashboard /> </PrivateRoute> }/>
         <Route path="/vendor/products/" element={<PrivateRoute> <Product /> </PrivateRoute> }/>
         <Route path="/vendor/orders/" element={<PrivateRoute> <VendorOrders /> </PrivateRoute> }/>
-        <Route path="/vendor/orders-detail/" element={<PrivateRoute> <VendorOrderDetail /> </PrivateRoute> }/>
+        <Route path="/vendor/orders/:order_oid/" element={<PrivateRoute> <VendorOrderDetail /> </PrivateRoute> }/>
 
       </Routes>
       <StoreFooter />

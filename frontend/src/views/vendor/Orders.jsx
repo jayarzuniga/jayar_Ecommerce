@@ -1,8 +1,23 @@
-import React from 'react';
-import Sidebar from './Sidebar';
+import {useState, useEffect} from 'react'
+import Sidebar from './Sidebar'
+import apiInstance from '../../utils/axios'
+import UserData from "../plugin/UserData";
 import { Link } from 'react-router-dom';
+import moment from "moment";
 
 function Orders() {
+    const [orders, setOrders] = useState([])
+
+    useEffect(() => {
+        apiInstance
+            .get('/vendor/orders/' + UserData().vendor_id)
+            .then((res) => {
+                setOrders(res.data);
+            })
+
+    }, [])
+
+
     return (
         <div className="container-fluid" id="main">
             <div className="row row-offcanvas row-offcanvas-left h-100">
@@ -84,19 +99,20 @@ function Orders() {
                         </thead>
                         <tbody>
 
-                            <tr>
-                                <th scope="row">#trytrr</th>
-                                <td>$100.90</td>
-                                <td>Paid</td>
-                                <td>Shipped</td>
-                                <td>20th June, 2023</td>
-                                <td>
-                                    <Link to="/vendor/orders-detail/" className="btn btn-primary mb-1">
-                                        <i className="fas fa-eye"></i>
-                                    </Link>
-                                </td>
-                            </tr>
-
+                           {orders?.map((o, index)=>(
+                               <tr key={index}> 
+                               <th scope="row">#{o.oid}</th>
+                               <td>${o.total}</td>
+                               <td>{o.payment_status?.toUpperCase()}</td>
+                               <td>{o.order_status?.toUpperCase()}</td>
+                               <td>{moment(o.date).format('MMMM DD, YYYY')}</td>
+                               <td>
+                                   <Link to={`/vendor/orders/${o.oid}/` }className="btn btn-primary mb-1">
+                                       <i className="fas fa-eye"></i>
+                                   </Link>
+                               </td>
+                                </tr>
+                           ))}
 
                         </tbody>
                     </table>
