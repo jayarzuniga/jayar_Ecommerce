@@ -17,6 +17,13 @@ function Orders() {
 
     }, [])
 
+    const handleFilterOrders = async (filter) => {
+        console.log(filter);
+
+        const response = await apiInstance.get(`vendor/orders/filter/${UserData().vendor_id}/?filter=${filter}`)
+        setOrders(response.data)
+    }
+
 
     return (
         <div className="container-fluid" id="main">
@@ -38,50 +45,50 @@ function Orders() {
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('paid')}>
                                     Payment Status: Paid
                                 </a>
                             </li>
                             <li>
-                                <a className="dropdown-item" href="#">
-                                    Payment Status: Unpaid
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('processing')}>
+                                    Payment Status: Processing
                                 </a>
                             </li>
                             <li>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('pending')}>
                                     Payment Status: Pending
+                                </a>
+                            </li>
+                            <li>
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('cancelled')}>
+                                    Payment Status: Cancelled
                                 </a>
                             </li>
                             <hr />
                             <li>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('latest')}>
                                     Date: Latest
                                 </a>
                             </li>
                             <li>
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('oldest')}>
                                     Date: Oldest
                                 </a>
                             </li>
                             <hr />
                             <li>
-                                <a className="dropdown-item" href="#">
-                                    Delivery Status: Shipped
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('Pending')}>
+                                    Delivery Status: Pending
                                 </a>
                             </li>
                             <li>
-                                <a className="dropdown-item" href="#">
-                                    Delivery Status: Processing
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('Fullfilled')}>
+                                    Delivery Status: Fulfilled
                                 </a>
                             </li>
                             <li>
-                                <a className="dropdown-item" href="#">
-                                    Delivery Status: Arrived
-                                </a>
-                            </li>
-                            <li>
-                                <a className="dropdown-item" href="#">
-                                    Delivery Status: Delivered
+                                <a className="dropdown-item" onClick={() => handleFilterOrders('Cancelled')}>
+                                    Delivery Status: Cancelled
                                 </a>
                             </li>
                         </ul>

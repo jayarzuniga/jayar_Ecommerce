@@ -53,6 +53,7 @@ urlpatterns = [
     path('vendor/products/<vendor_id>/', vendor_views.ProductAPIView.as_view()),
     path('vendor/orders/<vendor_id>/', vendor_views.OrderAPIView.as_view()),
     path('vendor/orders/<vendor_id>/<order_oid>/', vendor_views.OrderDetailAPIView.as_view()),
+    path('vendor/orders/filter/<int:vendor_id>', vendor_views.FilterOrderAPIView.as_view()),
     path('vendor-revenue/orders/<vendor_id>/', vendor_views.RevenueAPIView.as_view()),
     path('vendor-filter-product/<vendor_id>/', vendor_views.FilterProductAPIView.as_view()),
     path('vendor-earning/<vendor_id>/', vendor_views.EarningAPIView.as_view()),
