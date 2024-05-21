@@ -441,6 +441,7 @@ class ProductCreateView(generics.CreateAPIView):
         self.save_nested_data(product_instance, ColorSerializer, color_data)
         self.save_nested_data(product_instance, SizeSerializer, sizes_data)
         self.save_nested_data(product_instance, GallerySerializer, gallery_data)
+
         
     def save_nested_data(self, product_instance, serializer_class ,data):
         serializer = serializer_class(data=data, many=True, context={'product': product_instance})
@@ -458,7 +459,7 @@ class ProductUpdateView(generics.RetrieveUpdateAPIView):
         product_pid = self.kwargs['product_pid']
 
         vendor = Vendor.objects.get(id=vendor_id)
-        product = Product.objects.get(id=product_pid, vendor=vendor)
+        product = Product.objects.get(pid=product_pid, vendor=vendor)
 
         return product
 
@@ -481,7 +482,7 @@ class ProductUpdateView(generics.RetrieveUpdateAPIView):
         gallery_data = []
 
         for key, value in self.request.data.items():
-            if key.startswith('specification') and ['title'] in key:
+            if key.startswith('specification') and 'title' in key:
                 index = key.split('[')[1].split(']')[0]
                 title = value
                 content_key = f'specification[{index}][content]'
@@ -512,7 +513,7 @@ class ProductUpdateView(generics.RetrieveUpdateAPIView):
                     'price': price
                 })
 
-            elif key.startswith('gallery') and ['image'] in key:
+            elif key.startswith('gallery') and 'image' in key:
                 index = key.split('[')[1].split(']')[0]
                 image = value
                 gallery_data.append({
@@ -528,6 +529,8 @@ class ProductUpdateView(generics.RetrieveUpdateAPIView):
         self.save_nested_data(product, ColorSerializer, color_data)
         self.save_nested_data(product, SizeSerializer, sizes_data)
         self.save_nested_data(product, GallerySerializer, gallery_data)
+
+        return Response(serializer.data)
         
     def save_nested_data(self, product_instance, serializer_class ,data):
         serializer = serializer_class(data=data, many=True, context={'product_instance': product_instance})

@@ -167,7 +167,7 @@ function AddProduct() {
             icon: 'success',
             title: "Product Added Successfully",
             showConfirmButton: false,
-            timer: 1500
+            timer: 2000
           });
 
         navigate('/vendor/products')
