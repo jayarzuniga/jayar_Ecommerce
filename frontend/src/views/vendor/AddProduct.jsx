@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
 import apiInstance from '../../utils/axios'
 import UserData from "../plugin/UserData";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 
 function AddProduct() {
     const userData = UserData();
+    const navigate = useNavigate();
 
     const [product, setProduct] = useState({
         title: '',
@@ -118,6 +119,62 @@ function AddProduct() {
             })
     }, [])
 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        const formdata = new FormData()
+
+        Object.entries(product).forEach(([key, value]) => {
+            if (key === 'image' && value){
+                formdata.append(key, value.file)
+            } else {
+                formdata.append (key, value)
+            }
+        })
+
+        specification.forEach((spec, index) => {
+            Object.entries(spec).forEach(([key, value]) => {
+                formdata.append(`specification[${index}][${key}]`, value)
+            })
+        })
+
+        colors.forEach((color, index) => {
+            Object.entries(color).forEach(([key, value]) => {
+                formdata.append(`color[${index}][${key}]`, value)
+            })
+        })
+
+        sizes.forEach((size, index) => {
+            Object.entries(size).forEach(([key, value]) => {
+                formdata.append(`size[${index}][${key}]`, value)
+            })
+        })
+
+        gallery.forEach((item, index) => {
+            if (item.image) {
+                formdata.append(`gallery[${index}][image]`, item.image.file)
+            }
+        })
+
+        const response = await apiInstance.post('/vendor-create-product/', formdata, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: "Product Added Successfully",
+            showConfirmButton: false,
+            timer: 1500
+          });
+
+        navigate('/vendor/products')
+    }
+    
+    
+
     return (
         <div className="container-fluid" id="main">
             <div className="row row-offcanvas row-offcanvas-left h-100">
@@ -126,6 +183,8 @@ function AddProduct() {
 
                 <div className="col-md-9 col-lg-10 main mt-4">
                     <div className="container">
+
+                        <form onSubmit={handleSubmit}>
                         <div className="main-body">
                             <div className="tab-content" id="pills-tabContent">
                                 <div
@@ -139,12 +198,7 @@ function AddProduct() {
                                         <div className="col-md-12">
                                             <div className="card mb-3">
                                                 <div className="card-body">
-                                                    <form
-                                                        className="form-group"
-                                                        method="POST"
-                                                        noValidate=""
-                                                        encType="multipart/form-data"
-                                                    >
+
                                                         <div className="row text-dark">
                                                             <div className="col-lg-6 mb-2">
                                                                 <label htmlFor="" className="mb-2">
@@ -252,7 +306,7 @@ function AddProduct() {
                                                                 />
                                                             </div>
                                                         </div>
-                                                    </form>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -354,7 +408,7 @@ function AddProduct() {
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
-                                                                onChange={(event)=>handleInputChange(index, 'title', event.target.value, setSpecification)}
+                                                                onChange={(event)=>handleInputChange(index, 'content', event.target.value, setSpecification)}
                                                                 value={spec.content || ''}
                                                             />
                                                         </div>
@@ -405,11 +459,9 @@ function AddProduct() {
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
-                                                                name=""
                                                                 placeholder="Small, Medium, Large"
-                                                                id=""
                                                                 onChange={(event)=>handleInputChange(index, 'name', event.target.value, setSizes)}
-                                                                value={spec.title && ''}
+                                                                value={spec.name || ''}
                                                             />
                                                         </div>
                                                         <div className="col-lg-5 mb-2">
@@ -421,7 +473,7 @@ function AddProduct() {
                                                                 placeholder="$20.00"
                                                                 className="form-control"
                                                                 onChange={(event)=>handleInputChange(index, 'price', event.target.value, setSizes)}
-                                                                value={spec.price && ''}
+                                                                value={spec.price || ''}
                                                             />
                                                         </div>
                                                         <div className="col-lg-2 mt-2">
@@ -470,7 +522,7 @@ function AddProduct() {
                                                                 className="form-control"
                                                                 placeholder="Green"
                                                                 onChange={(event)=>handleInputChange(index, 'name', event.target.value, setColors)}
-                                                                value={spec.name && ''}
+                                                                value={spec.name || ''}
                                                             />
                                                         </div>
                                                         <div className="col-lg-4 mb-2">
@@ -482,7 +534,7 @@ function AddProduct() {
                                                                 placeholder="#f4f7f6"
                                                                 className="form-control"
                                                                 onChange={(event)=>handleInputChange(index, 'color_code', event.target.value, setColors)}
-                                                                value={spec.color_code && ''}
+                                                                value={spec.color_code || ''}
                                                             />
                                                         </div>
                                                         <div className="col-lg-4 mt-2">
@@ -590,13 +642,14 @@ function AddProduct() {
                                         </li>
                                     </ul>
                                     <div className="d-flex justify-content-center mb-5">
-                                        <button className="btn btn-success w-50">
+                                        <button className="btn btn-success w-50" type='submit'>
                                             Create Product <i className="fa fa-check-circle" />{" "}
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>

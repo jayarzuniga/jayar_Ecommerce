@@ -40,6 +40,7 @@ import VendorOrders from "./views/vendor/Orders";
 import VendorOrderDetail from "./views/vendor/OrderDetail";
 import Earning from "./views/vendor/Earning";
 import AddProduct from "./views/vendor/AddProduct";
+import UpdateProduct from "./views/vendor/UpdateProduct";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -102,6 +103,8 @@ function App() {
 
 
         <Route path="/vendor/add-product/" element={<PrivateRoute> <AddProduct /> </PrivateRoute> }/>
+        <Route path="/vendor/product/update/:pid" element={<PrivateRoute> <UpdateProduct /> </PrivateRoute> }/>
+
 
       </Routes>
       <StoreFooter />

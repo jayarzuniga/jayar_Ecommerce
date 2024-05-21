@@ -75,4 +75,5 @@ urlpatterns = [
 
 
     path('vendor-create-product/', vendor_views.ProductCreateView.as_view()),
+    path('vendor-update-product/<vendor_id>/<product_pid>/', vendor_views.ProductUpdateView.as_view()),
 ]
