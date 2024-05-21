@@ -537,3 +537,17 @@ class ProductUpdateView(generics.RetrieveUpdateAPIView):
 
         serializer.is_valid(raise_exception=True)
         serializer.save(product=product_instance)
+
+class ProductDeleteView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        vendor_id = self.kwargs['vendor_id']
+        product_pid = self.kwargs['product_pid']
+
+        vendor = Vendor.objects.get(id=vendor_id)
+        product = Product.objects.get(pid=product_pid, vendor=vendor)
+
+        return product

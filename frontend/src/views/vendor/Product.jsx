@@ -3,6 +3,15 @@ import Sidebar from './Sidebar'
 import apiInstance from '../../utils/axios'
 import UserData from "../plugin/UserData";
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
+const Toast = Swal.mixin ({
+        toast:true,
+        postion:"top",
+        showConfirmButton:false,
+        timer:2000,
+        timerProgressBar:true,
+    })
 
 function Product() {
     const [products, setProducts] = useState([])
@@ -14,6 +23,22 @@ function Product() {
             setProducts(res.data);
         })
     }, [])
+
+    const handleDeleteProduct = async (product_id) => {
+        try {
+            await apiInstance.delete(`/vendor-delete-product/${userData?.vendor_id}/${product_id}/`)
+            Toast.fire({
+                icon: 'success',
+                title: 'Product Deleted'
+            })
+            await apiInstance.get(`/vendor/products/${userData?.vendor_id}/`).then(res => {
+                setProducts(res.data);
+            })
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     
 
@@ -101,9 +126,9 @@ function Product() {
                                     <Link to={`/vendor/product/update/${p.pid}`} className="btn btn-success mb-1 me-2">
                                         <i className="fas fa-edit" />
                                     </Link>
-                                    <a href="" className="btn btn-danger mb-1">
+                                    <button onClick={() => handleDeleteProduct(p.pid)} className="btn btn-danger mb-1">
                                         <i className="fas fa-trash" />
-                                    </a>
+                                    </button>
                                 </td>
                                 </tr>
 
